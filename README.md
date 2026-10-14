@@ -1,6 +1,6 @@
 # ems-dispatch-ai
 
-[![CI](https://github.com/MOHAMMEDALAHMADI1/ems-dispatch-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/MOHAMMEDALAHMADI1/ems-dispatch-ai/actions/workflows/ci.yml)
+[![CI](https://github.com/MOHAMMEDYOUSEFALAHMADI/ems-dispatch-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/MOHAMMEDYOUSEFALAHMADI/ems-dispatch-ai/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 ![Data: synthetic](https://img.shields.io/badge/data-100%25%20synthetic-orange)
@@ -59,7 +59,7 @@ flowchart LR
 
 ## Quickstart
 ```bash
-git clone https://github.com/MOHAMMEDALAHMADI1/ems-dispatch-ai && cd ems-dispatch-ai
+git clone https://github.com/MOHAMMEDYOUSEFALAHMADI/ems-dispatch-ai && cd ems-dispatch-ai
 pip install -r requirements.txt
 pytest -q                                    # unit + integration tests
 python -m ems_dispatch_ai.experiment --quick # about 1 min; the full run (no flag) takes about 7 min and reproduces the numbers below
@@ -126,7 +126,7 @@ Mock by default. Set `TRIAGE_LLM_BASE_URL`, `TRIAGE_LLM_MODEL` (and optionally `
 - [ ] Real road network: OSRM on OpenStreetMap Riyadh extract, travel-time matrix caching
 - [ ] Priority-aware dispatch (P1 pre-emption) and crew-workload limits on relocations
 - [ ] Probabilistic forecasts (quantiles) and the expected-coverage model (MEXCLP) using forecast uncertainty
-- [ ] Bilingual triage evaluation set (link to [EMS-Bench](https://github.com/MOHAMMEDALAHMADI1/ems-bench))
+- [ ] Bilingual triage evaluation set (link to [EMS-Bench](https://github.com/MOHAMMEDYOUSEFALAHMADI/ems-bench))
 - [ ] Validation plan with de-identified historical CAD data, under appropriate approvals
 
 ## References
