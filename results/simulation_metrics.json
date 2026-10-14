@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "grid": [
+      10,
+      10
+    ],
+    "sim_days": 14,
+    "config": {
+      "n_ambulances": 24,
+      "call_processing_min": 1.5,
+      "chute_min": 1.0,
+      "on_scene_min": 18.0,
+      "transport_prob": 0.7,
+      "handover_min": 20.0,
+      "block_hours": 4,
+      "threshold_min": 8.0,
+      "backup_weight": 0.3,
+      "tail_threshold_min": 15.0,
+      "tail_weight": 0.5,
+      "seed": 0
+    },
+    "runtime_s": 403.1,
+    "router": "haversine"
+  },
+  "scenarios": {
+    "ramadan": {
+      "baseline_static": {
+        "incidents": 2148,
+        "median_min": 10.51,
+        "p90_min": 20.86,
+        "pct_within_8": 28.4,
+        "pct_within_10": 46.1,
+        "pct_queued": 0.0,
+        "p1_median_min": 10.93,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 2148,
+        "median_min": 8.98,
+        "p90_min": 20.45,
+        "pct_within_8": 43.2,
+        "pct_within_10": 56.2,
+        "pct_queued": 0.0,
+        "p1_median_min": 9.06,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 2148,
+        "median_min": 8.97,
+        "p90_min": 20.01,
+        "pct_within_8": 43.4,
+        "pct_within_10": 56.8,
+        "pct_queued": 0.0,
+        "p1_median_min": 9.05,
+        "relocations_per_day": 39.5
+      }
+    },
+    "normal": {
+      "baseline_static": {
+        "incidents": 2078,
+        "median_min": 9.94,
+        "p90_min": 18.94,
+        "pct_within_8": 33.1,
+        "pct_within_10": 50.4,
+        "pct_queued": 0.0,
+        "p1_median_min": 10.19,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 2078,
+        "median_min": 8.15,
+        "p90_min": 17.73,
+        "pct_within_8": 48.8,
+        "pct_within_10": 63.5,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.23,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 2078,
+        "median_min": 7.81,
+        "p90_min": 16.71,
+        "pct_within_8": 52.0,
+        "pct_within_10": 66.6,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.16,
+        "relocations_per_day": 44.2
+      }
+    }
+  },
+  "fleet_sensitivity": {
+    "16": {
+      "baseline_static": {
+        "incidents": 1051,
+        "median_min": 13.07,
+        "p90_min": 27.67,
+        "pct_within_8": 18.6,
+        "pct_within_10": 30.6,
+        "pct_queued": 0.76,
+        "p1_median_min": 13.26,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 1051,
+        "median_min": 11.4,
+        "p90_min": 25.66,
+        "pct_within_8": 29.4,
+        "pct_within_10": 42.2,
+        "pct_queued": 0.95,
+        "p1_median_min": 11.7,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 1051,
+        "median_min": 10.97,
+        "p90_min": 26.41,
+        "pct_within_8": 31.9,
+        "pct_within_10": 43.6,
+        "pct_queued": 0.86,
+        "p1_median_min": 11.7,
+        "relocations_per_day": 24.6
+      }
+    },
+    "20": {
+      "baseline_static": {
+        "incidents": 1051,
+        "median_min": 11.1,
+        "p90_min": 21.37,
+        "pct_within_8": 26.4,
+        "pct_within_10": 42.2,
+        "pct_queued": 0.0,
+        "p1_median_min": 10.0,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 1051,
+        "median_min": 9.67,
+        "p90_min": 21.2,
+        "pct_within_8": 39.8,
+        "pct_within_10": 52.3,
+        "pct_queued": 0.0,
+        "p1_median_min": 9.67,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 1051,
+        "median_min": 9.14,
+        "p90_min": 20.36,
+        "pct_within_8": 42.5,
+        "pct_within_10": 55.7,
+        "pct_queued": 0.0,
+        "p1_median_min": 9.05,
+        "relocations_per_day": 36.4
+      }
+    },
+    "24": {
+      "baseline_static": {
+        "incidents": 1051,
+        "median_min": 10.02,
+        "p90_min": 18.73,
+        "pct_within_8": 29.5,
+        "pct_within_10": 49.6,
+        "pct_queued": 0.0,
+        "p1_median_min": 9.7,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 1051,
+        "median_min": 8.53,
+        "p90_min": 19.02,
+        "pct_within_8": 47.1,
+        "pct_within_10": 60.1,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.82,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 1051,
+        "median_min": 7.88,
+        "p90_min": 17.69,
+        "pct_within_8": 51.3,
+        "pct_within_10": 63.7,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.13,
+        "relocations_per_day": 43.4
+      }
+    },
+    "28": {
+      "baseline_static": {
+        "incidents": 1051,
+        "median_min": 8.81,
+        "p90_min": 15.79,
+        "pct_within_8": 41.1,
+        "pct_within_10": 61.4,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.88,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 1051,
+        "median_min": 7.43,
+        "p90_min": 16.32,
+        "pct_within_8": 53.7,
+        "pct_within_10": 66.4,
+        "pct_queued": 0.0,
+        "p1_median_min": 7.5,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 1051,
+        "median_min": 7.34,
+        "p90_min": 16.12,
+        "pct_within_8": 55.4,
+        "pct_within_10": 68.5,
+        "pct_queued": 0.0,
+        "p1_median_min": 7.26,
+        "relocations_per_day": 44.9
+      }
+    },
+    "32": {
+      "baseline_static": {
+        "incidents": 1051,
+        "median_min": 8.56,
+        "p90_min": 15.79,
+        "pct_within_8": 43.7,
+        "pct_within_10": 62.3,
+        "pct_queued": 0.0,
+        "p1_median_min": 8.52,
+        "relocations_per_day": 0.0
+      },
+      "ai_static_mclp": {
+        "incidents": 1051,
+        "median_min": 7.07,
+        "p90_min": 14.65,
+        "pct_within_8": 58.6,
+        "pct_within_10": 72.2,
+        "pct_queued": 0.0,
+        "p1_median_min": 7.19,
+        "relocations_per_day": 0.0
+      },
+      "ai_dynamic_mclp": {
+        "incidents": 1051,
+        "median_min": 6.99,
+        "p90_min": 14.53,
+        "pct_within_8": 60.2,
+        "pct_within_10": 73.5,
+        "pct_queued": 0.0,
+        "p1_median_min": 7.19,
+        "relocations_per_day": 49.4
+      }
+    }
+  }
+}
