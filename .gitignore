@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 .env
 results/experiment_std*
+.ruff_cache/

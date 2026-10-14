@@ -1,7 +1,5 @@
 from datetime import date
 
-import numpy as np
-
 from ems_dispatch_ai import synth
 from ems_dispatch_ai.forecast import DemandForecaster, HistoricalAverage, evaluate
 from ems_dispatch_ai.geo import Grid

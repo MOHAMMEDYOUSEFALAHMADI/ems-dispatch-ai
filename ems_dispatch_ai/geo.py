@@ -1,8 +1,8 @@
 """Riyadh grid, distances and travel-time estimation (haversine fallback, optional OSRM)."""
+
 from __future__ import annotations
 
 import json
-import math
 import os
 import urllib.request
 from dataclasses import dataclass
@@ -62,9 +62,9 @@ def haversine_km(lat1, lon1, lat2, lon2):
 def speed_kmh(hour: int, ramadan: bool = False) -> float:
     """Emergency-vehicle average road speed by hour of day (synthetic Riyadh traffic profile)."""
     if ramadan:
-        if 16 <= hour <= 18:          # pre-iftar rush
+        if 16 <= hour <= 18:  # pre-iftar rush
             return 26.0
-        if hour >= 21 or hour <= 1:   # busy Ramadan nights
+        if hour >= 21 or hour <= 1:  # busy Ramadan nights
             return 34.0
     if hour in (6, 7, 8, 12, 13, 16, 17, 18):  # commute / school / afternoon peaks
         return 28.0

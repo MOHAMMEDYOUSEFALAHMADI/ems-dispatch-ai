@@ -6,13 +6,13 @@ from ems_dispatch_ai.coverage import covered_fraction, greedy_mclp, kmeans_sites
 
 
 def brute_force(d, tt, p, T, bw):
-    best, arg = -1, None
+    best, _arg = -1, None
     a = tt <= T
     for comb in itertools.combinations(range(tt.shape[0]), p):
         k = a[list(comb)].sum(0)
         v = (d * (k >= 1)).sum() + bw * (d * (k >= 2)).sum()
         if v > best + 1e-9:
-            best, arg = v, comb
+            best, _arg = v, comb
     return best
 
 

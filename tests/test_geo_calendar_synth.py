@@ -41,8 +41,8 @@ def test_calendar():
 
 def test_ramadan_shifts_demand_to_night_and_pre_iftar():
     g = Grid()
-    normal = synth.expected_rates(date(2025, 4, 14), 1, g).sum(axis=2)[0]   # Monday
-    ram = synth.expected_rates(date(2025, 3, 10), 1, g).sum(axis=2)[0]      # Monday in Ramadan
+    normal = synth.expected_rates(date(2025, 4, 14), 1, g).sum(axis=2)[0]  # Monday
+    ram = synth.expected_rates(date(2025, 3, 10), 1, g).sum(axis=2)[0]  # Monday in Ramadan
     assert ram[17] > normal[17] and ram[23] > normal[23] and ram[11] < normal[11]
 
 

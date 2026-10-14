@@ -5,8 +5,15 @@ import pandas as pd
 
 from ems_dispatch_ai import synth
 from ems_dispatch_ai.geo import Grid, HaversineRouter
-from ems_dispatch_ai.simulate import (Policy, SimConfig, legacy_posts, nearest_available, simulate,
-                                      static_policy, summarize)
+from ems_dispatch_ai.simulate import (
+    Policy,
+    SimConfig,
+    legacy_posts,
+    nearest_available,
+    simulate,
+    static_policy,
+    summarize,
+)
 
 
 def test_nearest_available_skips_busy():
@@ -40,8 +47,15 @@ def test_dynamic_policy_relocates():
     cen = g.centroids()
     plans = {0: cen[[0, 9, 90, 99]], 1: cen[[44, 45, 54, 55]]}
     pol = Policy("toggle", lambda day, hour: plans[(hour // 4) % 2], dynamic=True)
-    inc = pd.DataFrame({"t_min": [10.0, 300.0, 500.0], "lat": cen[[44, 45, 54], 0], "lon": cen[[44, 45, 54], 1],
-                        "cell": [44, 45, 54], "priority": [1, 2, 3]})
+    inc = pd.DataFrame(
+        {
+            "t_min": [10.0, 300.0, 500.0],
+            "lat": cen[[44, 45, 54], 0],
+            "lon": cen[[44, 45, 54], 1],
+            "cell": [44, 45, 54],
+            "priority": [1, 2, 3],
+        }
+    )
     r = simulate(inc, date(2025, 4, 15), pol, g, cfg)
     assert r.attrs["relocations"] >= 4
     assert r["travel_min"].iloc[1] < r["travel_min"].iloc[0]  # after relocation units are near the centre

@@ -3,6 +3,7 @@
 python -m ems_dispatch_ai.experiment [--quick]
 Writes results/*.json and docs/*.png (used by README and the Streamlit dashboard).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -28,7 +29,7 @@ SCENARIOS = {"ramadan": date(2025, 3, 8), "normal": date(2025, 4, 15)}
 
 
 def build_policies(grid, fc, cfg, router, start, days):
-    cen = grid.centroids()
+    grid.centroids()
     n = cfg.n_ambulances
     legacy = legacy_posts(grid, n)
     # static MCLP: one plan from forecast average demand over the horizon
@@ -41,13 +42,14 @@ def build_policies(grid, fc, cfg, router, start, days):
         if key not in cache:
             hrs = list(range(hour, hour + cfg.block_hours))
             dem = fc.predict_block(key[0], hrs)
-            cache[key] = mclp_posts(grid, dem, n, cfg, router, hour + cfg.block_hours // 2,
-                                    cal.is_ramadan(key[0]))
+            cache[key] = mclp_posts(grid, dem, n, cfg, router, hour + cfg.block_hours // 2, cal.is_ramadan(key[0]))
         return cache[key]
 
-    return [static_policy("baseline_static", legacy),
-            static_policy("ai_static_mclp", static),
-            Policy("ai_dynamic_mclp", dynamic, dynamic=True)], cache
+    return [
+        static_policy("baseline_static", legacy),
+        static_policy("ai_static_mclp", static),
+        Policy("ai_dynamic_mclp", dynamic, dynamic=True),
+    ], cache
 
 
 def run(quick: bool = False, out_results=RESULTS, out_docs=DOCS):
@@ -63,7 +65,8 @@ def run(quick: bool = False, out_results=RESULTS, out_docs=DOCS):
     ram = test["date"].dt.date.map(cal.is_ramadan).to_numpy()
     y, rt = test["count"].to_numpy(), test["rate_true"].to_numpy()
     fmetrics = {
-        "train_rows": len(train), "test_rows": len(test),
+        "train_rows": len(train),
+        "test_rows": len(test),
         "gradient_boosting": evaluate(y, p_gb, rt),
         "historical_average": evaluate(y, p_ha, rt),
         "true_rate_oracle": evaluate(y, rt, rt),
@@ -89,8 +92,10 @@ def run(quick: bool = False, out_results=RESULTS, out_docs=DOCS):
             "baseline_static": policies[0].posts_fn(start, 0).tolist(),
             "ai_static_mclp": policies[1].posts_fn(start, 0).tolist(),
             "ai_dynamic_mclp": {f"{d} {h:02d}:00": p.tolist() for (d, h), p in sorted(cache.items())},
-            "demand_forecast_by_block": {f"{d} {h:02d}:00": fc.predict_block(d, list(range(h, h + cfg.block_hours))).tolist()
-                                         for (d, h) in sorted(cache)},
+            "demand_forecast_by_block": {
+                f"{d} {h:02d}:00": fc.predict_block(d, list(range(h, h + cfg.block_hours))).tolist()
+                for (d, h) in sorted(cache)
+            },
         }
 
     sens = {}
@@ -102,19 +107,27 @@ def run(quick: bool = False, out_results=RESULTS, out_docs=DOCS):
             pols, _ = build_policies(grid, fc, c, router, start, 7)
             sens[n] = {p.name: summarize(simulate(inc, start, p, grid, c, router), 7) for p in pols}
 
-    meta = {"grid": [grid.n_rows, grid.n_cols], "sim_days": days, "config": cfg.__dict__,
-            "runtime_s": round(time.time() - t0, 1), "router": router.name}
+    meta = {
+        "grid": [grid.n_rows, grid.n_cols],
+        "sim_days": days,
+        "config": cfg.__dict__,
+        "runtime_s": round(time.time() - t0, 1),
+        "router": router.name,
+    }
     (out_results / "forecast_metrics.json").write_text(json.dumps(fmetrics, indent=2))
-    (out_results / "simulation_metrics.json").write_text(json.dumps({"meta": meta, "scenarios": summaries,
-                                                                     "fleet_sensitivity": sens}, indent=2))
-    (out_results / "posts.json").write_text(json.dumps({"centroids": grid.centroids().tolist(),
-                                                        "hospitals": HOSPITALS, "scenarios": posts_out}))
+    (out_results / "simulation_metrics.json").write_text(
+        json.dumps({"meta": meta, "scenarios": summaries, "fleet_sensitivity": sens}, indent=2)
+    )
+    (out_results / "posts.json").write_text(
+        json.dumps({"centroids": grid.centroids().tolist(), "hospitals": HOSPITALS, "scenarios": posts_out})
+    )
     charts(test, sims, summaries, sens, grid, posts_out, out_docs)
     return fmetrics, summaries, sens
 
 
 def charts(test, sims, summaries, sens, grid, posts_out, out_docs):
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -138,7 +151,7 @@ def charts(test, sims, summaries, sens, grid, posts_out, out_docs):
 
     # 2. response-time CDFs
     fig, axes = plt.subplots(1, len(summaries), figsize=(11, 3.8), sharey=True)
-    for ax, scen in zip(np.atleast_1d(axes), summaries):
+    for ax, scen in zip(np.atleast_1d(axes), summaries, strict=False):
         for pol in summaries[scen]:
             r = np.sort(sims[(scen, pol)]["response_min"].to_numpy())
             ax.plot(r, np.arange(1, len(r) + 1) / len(r), color=colors[pol], label=pol, lw=1.8)
@@ -156,8 +169,11 @@ def charts(test, sims, summaries, sens, grid, posts_out, out_docs):
 
     # 3. bar chart of key metrics
     fig, axes = plt.subplots(1, 3, figsize=(11, 3.4))
-    for ax, (key, label) in zip(axes, [("median_min", "median (min)"), ("p90_min", "90th percentile (min)"),
-                                       ("pct_within_8", "% within 8 min")]):
+    for ax, (key, label) in zip(
+        axes,
+        [("median_min", "median (min)"), ("p90_min", "90th percentile (min)"), ("pct_within_8", "% within 8 min")],
+        strict=False,
+    ):
         x = np.arange(len(summaries))
         pols = list(next(iter(summaries.values())))
         for i, pol in enumerate(pols):
@@ -209,9 +225,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     a = ap.parse_args(argv)
-    f, s, sens = run(a.quick)
-    print(json.dumps({"forecast": {k: f[k] for k in ("gradient_boosting", "historical_average", "ramadan_only")},
-                      "simulation": s}, indent=2))
+    f, s, _sens = run(a.quick)
+    print(
+        json.dumps(
+            {
+                "forecast": {k: f[k] for k in ("gradient_boosting", "historical_average", "ramadan_only")},
+                "simulation": s,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

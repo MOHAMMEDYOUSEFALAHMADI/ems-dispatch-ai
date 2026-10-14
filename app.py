@@ -1,4 +1,5 @@
 """Streamlit dashboard:  streamlit run app.py   (run `python -m ems_dispatch_ai.experiment` first)."""
+
 from __future__ import annotations
 
 import json
@@ -40,15 +41,34 @@ with tab_map:
     hosp_df = pd.DataFrame([{"name": k, "lat": v[0], "lon": v[1]} for k, v in posts["hospitals"].items()])
     try:
         import pydeck as pdk
+
         layers = [
             pdk.Layer("HeatmapLayer", demand_df, get_position="[lon, lat]", get_weight="demand", radius_pixels=60),
-            pdk.Layer("ScatterplotLayer", posts_df, get_position="[lon, lat]", get_fill_color=[30, 80, 200],
-                      get_radius=600, pickable=True),
-            pdk.Layer("ScatterplotLayer", hosp_df, get_position="[lon, lat]", get_fill_color=[0, 150, 60],
-                      get_radius=500, pickable=True),
+            pdk.Layer(
+                "ScatterplotLayer",
+                posts_df,
+                get_position="[lon, lat]",
+                get_fill_color=[30, 80, 200],
+                get_radius=600,
+                pickable=True,
+            ),
+            pdk.Layer(
+                "ScatterplotLayer",
+                hosp_df,
+                get_position="[lon, lat]",
+                get_fill_color=[0, 150, 60],
+                get_radius=500,
+                pickable=True,
+            ),
         ]
-        st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=pdk.ViewState(latitude=24.69, longitude=46.72, zoom=10),
-                                 tooltip={"text": "{name}"}, map_style=None))
+        st.pydeck_chart(
+            pdk.Deck(
+                layers=layers,
+                initial_view_state=pdk.ViewState(latitude=24.69, longitude=46.72, zoom=10),
+                tooltip={"text": "{name}"},
+                map_style=None,
+            )
+        )
     except ImportError:
         st.map(posts_df)
     st.caption(f"Heat = forecast incidents in block {block}; blue = ambulance posts ({policy}); green = hospitals.")
@@ -61,8 +81,11 @@ with tab_metrics:
     c2.bar_chart(df[["pct_within_8", "pct_within_10"]])
     if sim.get("fleet_sensitivity"):
         st.subheader("Fleet-size sensitivity (p90, minutes)")
-        st.line_chart(pd.DataFrame({int(n): {k: v["p90_min"] for k, v in d.items()}
-                                    for n, d in sim["fleet_sensitivity"].items()}).T)
+        st.line_chart(
+            pd.DataFrame(
+                {int(n): {k: v["p90_min"] for k, v in d.items()} for n, d in sim["fleet_sensitivity"].items()}
+            ).T
+        )
 
 with tab_forecast:
     st.json({k: fc[k] for k in ("gradient_boosting", "historical_average", "ramadan_only")})
@@ -71,8 +94,10 @@ with tab_forecast:
         st.image(str(img))
 
 with tab_triage:
-    st.write("Paste a call note in Arabic or English. Default backend is a transparent rule-based mock; "
-             "set TRIAGE_LLM_BASE_URL / TRIAGE_LLM_MODEL to use an OpenAI-compatible model.")
+    st.write(
+        "Paste a call note in Arabic or English. Default backend is a transparent rule-based mock; "
+        "set TRIAGE_LLM_BASE_URL / TRIAGE_LLM_MODEL to use an OpenAI-compatible model."
+    )
     note = st.text_area("Call note", "رجل عمره ٦٠ سنة عنده ألم في الصدر وتعرق")
     if st.button("Triage"):
         st.json(TriageAssistant().triage(note).to_dict())

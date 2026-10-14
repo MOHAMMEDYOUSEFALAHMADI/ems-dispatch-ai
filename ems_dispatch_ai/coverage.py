@@ -1,10 +1,10 @@
 """Ambulance posting optimisation: Maximal Covering Location Problem (Church & ReVelle 1974)
 with an optional backup-coverage term (Hogan & ReVelle 1986), solved exactly as a MILP (SciPy/HiGHS).
 """
+
 from __future__ import annotations
 
 import numpy as np
-
 from scipy.optimize import Bounds, LinearConstraint, milp
 from scipy.sparse import csr_matrix, eye, hstack
 
@@ -14,9 +14,17 @@ def coverage_sets(tt: np.ndarray, threshold_min: float) -> np.ndarray:
     return tt <= threshold_min
 
 
-def mclp(demand: np.ndarray, tt: np.ndarray, p: int, threshold_min: float,
-         backup_weight: float = 0.3, max_per_site: int = 1, time_limit: float = 20.0,
-         tail_threshold_min: float | None = None, tail_weight: float = 0.0) -> list[int]:
+def mclp(
+    demand: np.ndarray,
+    tt: np.ndarray,
+    p: int,
+    threshold_min: float,
+    backup_weight: float = 0.3,
+    max_per_site: int = 1,
+    time_limit: float = 20.0,
+    tail_threshold_min: float | None = None,
+    tail_weight: float = 0.0,
+) -> list[int]:
     """Choose p ambulance posts (site indices, repeats allowed if max_per_site > 1).
 
     maximise   sum_i d_i * (y1_i + backup_weight * y2_i + tail_weight * y3_i)
@@ -35,14 +43,22 @@ def mclp(demand: np.ndarray, tt: np.ndarray, p: int, threshold_min: float,
     I, Z = eye(n_d, format="csr"), csr_matrix((n_d, n_d))
     blocks_cov = [-csr_matrix(a.T), I, I] + ([Z] if use_tail else [])
     blocks_ord = [csr_matrix((n_d, n_s)), -I, I] + ([Z] if use_tail else [])
-    cons = [LinearConstraint(hstack(blocks_cov), -np.inf, 0), LinearConstraint(hstack(blocks_ord), -np.inf, 0),
-            LinearConstraint(hstack([csr_matrix(np.ones((1, n_s))), csr_matrix((1, ny * n_d))]), p, p)]
+    cons = [
+        LinearConstraint(hstack(blocks_cov), -np.inf, 0),
+        LinearConstraint(hstack(blocks_ord), -np.inf, 0),
+        LinearConstraint(hstack([csr_matrix(np.ones((1, n_s))), csr_matrix((1, ny * n_d))]), p, p),
+    ]
     if use_tail:
         at = coverage_sets(tt, tail_threshold_min).astype(float)
         cons.append(LinearConstraint(hstack([-csr_matrix(at.T), Z, Z, I]), -np.inf, 0))
     ub = np.concatenate([np.full(n_s, max_per_site), np.ones(ny * n_d)])
-    res = milp(c, constraints=cons, integrality=np.ones(n_s + ny * n_d), bounds=Bounds(0, ub),
-               options={"time_limit": time_limit, "disp": False})
+    res = milp(
+        c,
+        constraints=cons,
+        integrality=np.ones(n_s + ny * n_d),
+        bounds=Bounds(0, ub),
+        options={"time_limit": time_limit, "disp": False},
+    )
     if res.x is None:
         return greedy_mclp(demand, tt, p, threshold_min, backup_weight)
     x = np.round(res.x[:n_s]).astype(int)
